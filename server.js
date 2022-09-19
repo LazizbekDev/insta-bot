@@ -1,5 +1,9 @@
 import TelegramBot from "node-telegram-bot-api";
 import axios from "axios";
+import express from "express"
+
+const app = express()
+app.use(express.json());
 
 const TOKEN = "5415065601:AAG65fYP4AT5ozeVfsfVRDa7jR25UUO6qTE"
 
@@ -20,8 +24,8 @@ const download = async (url) => {
         const res = await axios.request(options)
 
         const result = {
-            media: res.data.media,
-            title: res.data.title
+            media: res.data?.media,
+            title: res.data?.title
         }
 
         return result
@@ -32,17 +36,27 @@ const download = async (url) => {
 
 bot.on('message', async (m) => {
     try {
-        const id = m.chat.id;
-        if (m.text == '/start') {
-            await bot.sendMessage(id, `Salom ${m.chat.first_name}, men Yuksta. Instagram video havolasini yuboring`)
+        const id = m?.chat?.id;
+        if (m?.text == '/start') {
+            await bot.sendMessage(id, `Salom ${m?.chat?.first_name}, men Yuksta. Instagram video havolasini yuboring`)
         }
 
-        const res = await download(m.text);
+        const res = await download(m?.text);
 
-        await bot.sendVideo(id, res.media, {
-            caption: res.title
+        await bot.sendVideo(id, res?.media, {
+            caption: res?.title
         })
     } catch (err) {
         console.log(err)
     }
+})
+
+app.get('/', (req, res) => {
+    res.send('yuksta api')
+})
+
+const PORT = 5000;
+
+app.listen(process.env.PORT || PORT, () => {
+    console.log('Server running')
 })
