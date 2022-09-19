@@ -1,0 +1,20 @@
+{
+  "name": "yuksta-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "node-telegram-bot-api": "^0.59.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
