@@ -24,7 +24,6 @@ const download = async (url) => {
             title: res.data.title
         }
 
-        console.log(res.data)
         return result
     } catch (error) {
         console.log(error)
