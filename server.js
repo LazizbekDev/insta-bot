@@ -5,7 +5,7 @@ import express from "express"
 const app = express()
 app.use(express.json());
 
-const TOKEN = "5415065601:AAG65fYP4AT5ozeVfsfVRDa7jR25UUO6qTE"
+const TOKEN = "5415065601:AAG65fYP4AT5ozeVfsfVRDa7jR25UUO6qTE";
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
