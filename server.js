@@ -40,7 +40,7 @@ bot.on('message', async (m) => {
         const res = await download(m.text);
 
         await bot.sendVideo(id, res.media, {
-            caption: `${res.title} /n @mernme`
+            caption: res.title
         })
     } catch (err) {
         console.log(err)
