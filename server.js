@@ -45,7 +45,7 @@ bot.on('message', async (m) => {
         const res = await download(m?.text);
 
         await bot.sendVideo(id, res?.data?.media, {
-            caption: res.data?.title
+            caption: res?.data?.title
         })
     } catch (err) {
         console.log(err)
