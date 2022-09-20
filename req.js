@@ -1,32 +1,57 @@
+import TelegramBot from "node-telegram-bot-api";
 import axios from "axios";
+import express from "express"
 
-const download = async (e) => {
+const app = express()
+app.use(express.json());
+
+const TOKEN = "5773119919:AAFP7b-5tcpDqpKq5hULs0T2VK_X0EY3VEg";
+
+const bot = new TelegramBot(TOKEN, { polling: true });
+
+const download = async (url) => {
+    const options = {
+        method: 'GET',
+        url: 'https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index',
+        params: { url },
+        headers: {
+            'X-RapidAPI-Key': '9ea5748716msh4cb3f676d47021dp17a992jsn7d30a9b73573',
+            'X-RapidAPI-Host': 'instagram-downloader-download-instagram-videos-stories.p.rapidapi.com'
+        }
+    };
+
     try {
-        const res = await axios.get('https://instagram-downloader.p.rapidapi.com/insi.php', {
-            headers: {
-                'X-RapidAPI-Key': '06fdc64e18mshc6e2868dc26e1c6p1b76e6jsnd8718f1785de',
-                'X-RapidAPI-Host': 'instagram-downloader.p.rapidapi.com'
-            }
-        })
+        const res = await axios.request(options)
 
-        console.log(res)
+        return res
     } catch (error) {
         console.log(error)
     }
 }
 
-const options = {
-    method: 'GET',
-    url: 'https://instagram-downloader.p.rapidapi.com/insi.php',
-    params: { li: '' },
-    headers: {
-        'X-RapidAPI-Key': '06fdc64e18mshc6e2868dc26e1c6p1b76e6jsnd8718f1785de',
-        'X-RapidAPI-Host': 'instagram-downloader.p.rapidapi.com'
-    }
-};
+bot.on('message', async (m) => {
+    try {
+        const id = m?.chat?.id;
+        if (m?.text == '/start') {
+            await bot.sendMessage(id, `Salom ${m?.chat?.first_name}, men Yuksta. Instagram video havolasini yuboring`)
+        } else if (m?.text.startsWith('https://instagram.com/stories/')) {
+            const res = await download(m?.text);
 
-axios.request(options).then(function (response) {
-    console.log(response.data);
-}).catch(function (error) {
-    console.error(error);
-});
+            res.data?.map( async (d,i) => {
+                await bot.sendVideo(id, d?.media)
+            })   
+        }
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+app.get('/', (req, res) => {
+    res.send('yuksta api')
+})
+
+const PORT = 5000;
+
+app.listen(process.env.PORT || PORT, () => {
+    console.log('Server running')
+})

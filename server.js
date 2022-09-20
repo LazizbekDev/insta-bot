@@ -5,7 +5,7 @@ import express from "express"
 const app = express()
 app.use(express.json());
 
-const TOKEN = "*******************************";
+const TOKEN = "5415065601:AAG65fYP4AT5ozeVfsfVRDa7jR25UUO6qTE";
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
@@ -23,12 +23,7 @@ const download = async (url) => {
     try {
         const res = await axios.request(options)
 
-        const result = {
-            media: res.data?.media,
-            title: res.data?.title
-        }
-
-        return result
+        return res
     } catch (error) {
         console.log(error)
     }
@@ -39,12 +34,18 @@ bot.on('message', async (m) => {
         const id = m?.chat?.id;
         if (m?.text == '/start') {
             await bot.sendMessage(id, `Salom ${m?.chat?.first_name}, men Yuksta. Instagram video havolasini yuboring`)
+        } else if (m?.text.startsWith('https://instagram.com/stories/')) {
+            const res = await download(m?.text);
+
+            res.data?.map( async (d,i) => {
+                await bot.sendVideo(id, d?.media)
+            })   
         }
 
         const res = await download(m?.text);
 
-        await bot.sendVideo(id, res?.media, {
-            caption: res?.title
+        await bot.sendVideo(id, res?.data?.media, {
+            caption: res.data?.title
         })
     } catch (err) {
         console.log(err)
