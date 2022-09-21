@@ -37,14 +37,14 @@ bot.on('message', async (m) => {
         } else if (m?.text.startsWith('https://instagram.com/stories/')) {
             const res = await download(m?.text);
 
-            res?.data?.map( async (d,i) => {
+            res.data?.map( async (d,i) => {
                 await bot.sendVideo(id, d?.media)
             })   
         }
 
         const res = await download(m?.text);
 
-        await bot.sendVideo(id, res?.data?.media, {
+        await bot.sendVideo(id, res.data?.media, {
             caption: res?.data?.title
         })
     } catch (err) {
